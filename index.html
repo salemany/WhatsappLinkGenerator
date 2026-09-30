@@ -1,0 +1,116 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>WhatsappLink Generator</title>
+    <link rel="stylesheet" href="./style.css">
+</head>
+<body>
+    <main class="main-container">
+        <div class="main-form">
+            <form class="frm-gen">
+                <h1>Whatsapp Link Generator <span><i class="bi bi-whatsapp"></i></span></h1>
+                <div>
+                    <label for="codigo_telefonico">Selecciona el país</label>
+                    <select name="codigo_telefonico" id="codigo_telefonico">
+                        <!-- Países de América Latina y España -->
+                        <option value="+54" data-country="AR">🇦🇷 Argentina +54</option>
+                        <option value="+591" data-country="BO">🇧🇴 Bolivia +591</option>
+                        <option value="+55" data-country="BR">🇧🇷 Brasil +55</option>
+                        <option value="+56" data-country="CL">🇨🇱 Chile +56</option>
+                        <option value="+57" data-country="CO">🇨🇴 Colombia +57</option>
+                        <option value="+506" data-country="CR">🇨🇷 Costa Rica +506</option>
+                        <option value="+53" data-country="CU">🇨🇺 Cuba +53</option>
+                        <option value="+593" data-country="EC">🇪🇨 Ecuador +593</option>
+                        <option value="+503" data-country="SV">🇸🇻 El Salvador +503</option>
+                        <option value="+34" data-country="ES">🇪🇸 España +34</option>
+                        <option value="+1" data-country="US">🇺🇸 Estados Unidos +1</option>
+                        <option value="+502" data-country="GT">🇬🇹 Guatemala +502</option>
+                        <option value="+504" data-country="HN">🇭🇳 Honduras +504</option>
+                        <option value="+52" data-country="MX">🇲🇽 México +52</option>
+                        <option value="+505" data-country="NI">🇳🇮 Nicaragua +505</option>
+                        <option value="+507" data-country="PA">🇵🇦 Panamá +507</option>
+                        <option value="+595" data-country="PY">🇵🇾 Paraguay +595</option>
+                        <option value="+51" data-country="PE">🇵🇪 Perú +51</option>
+                        <option value="+1" data-country="DO">🇩🇴 Rep. Dominicana +1</option>
+                        <option value="+598" data-country="UY">🇺🇾 Uruguay +598</option>
+                        <option value="+58" data-country="VE">🇻🇪 Venezuela +58</option>
+
+                        <!-- Otros países comunes -->
+                        <option value="+49" data-country="DE">🇩🇪 Alemania +49</option>
+                        <option value="+1" data-country="CA">🇨🇦 Canadá +1</option>
+                        <option value="+86" data-country="CN">🇨🇳 China +86</option>
+                        <option value="+33" data-country="FR">🇫🇷 Francia +33</option>
+                        <option value="+44" data-country="GB">🇬🇧 Reino Unido +44</option>
+                        <option value="+39" data-country="IT">🇮🇹 Italia +39</option>
+                        <option value="+81" data-country="JP">🇯🇵 Japón +81</option>
+                        </select>
+                </div>
+                <div>
+                    <label for="txt-nmb">Cod.area + cel (sin 0 ni 15)</label>
+                    <input type="text" maxlength="10" id="txt-nmb" placeholder="11 2222-3333">
+                </div>
+                <div style="display: flex;flex-direction: column;">
+                    <label for="msg-wsp">Escribe el mensaje</label>
+                    <textarea cols="30" rows="5" name="msg-wsp" id="msg-wsp" class="msg-wsp"></textarea>
+                </div>
+                <div class="emoji-container">
+                    <button type="button" class="emoji-btn">😀</button>
+                    <button type="button" class="emoji-btn">😂</button>
+                    <button type="button" class="emoji-btn">🥰</button>
+                    <button type="button" class="emoji-btn">😎</button>
+                    <button type="button" class="emoji-btn">👍</button>
+                    <button type="button" class="emoji-btn">🙌</button>
+                    <button type="button" class="emoji-btn">🔥</button>
+                    <button type="button" class="emoji-btn">✨</button>
+                </div>
+                <div>
+                    <button id="btn-gen" class="btn-gen" name="btn-gen">Generar</button>
+                </div>
+            </form>
+        </div>
+    </main>
+    <script>
+        const ctryCode = document.getElementById('codigo_telefonico');
+        const numTel = document.getElementById('txt-nmb');
+        const cajaMensaje = document.getElementById('msg-wsp');
+        const botonesEmoji = document.querySelectorAll('.emoji-btn');
+        const btnEnviar = document.getElementById('btn-gen');
+
+        botonesEmoji.forEach(boton => {
+            boton.addEventListener('click', () => {
+                cajaMensaje.value += boton.textContent;
+                cajaMensaje.focus();
+            });
+        });
+
+        btnEnviar.addEventListener('click', () => {
+            const mensajeCrudo = cajaMensaje.value;
+            const numTelefono = numTel.value;
+            
+            if (!numTelefono.trim()) {
+                alert("El número está vacío");
+                return;
+            }
+            
+            if (!mensajeCrudo.trim()) {
+                alert("El mensaje está vacío");
+                return;
+            }
+
+            // encodeURIComponent convierte los espacios en %20, y los emojis en sus códigos URL seguros.
+            // Ejemplo: "Hola 😀" se convierte en "Hola%20%F0%9F%98%80"
+            const mensajeCodificado = encodeURIComponent(mensajeCrudo);
+            const phoneNumber = ctryCode.value + numTelefono;
+            // Si tienes el número de destino, agrégalo después del .me/ (ej: wa.me/5491123456789?text=...)
+            // Si lo dejas vacío, abrirá WhatsApp pidiendo que elijas un contacto.
+            const urlWhatsapp = `https://api.whatsapp.com/send?phone=${phoneNumber}&text=${mensajeCodificado}`;
+
+            // Abre WhatsApp en una nueva pestaña
+            window.open(urlWhatsapp, '_blank');
+        });
+    </script>
+    
+</body>
+</html>
