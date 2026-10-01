@@ -78,6 +78,7 @@ h1 {
     gap: 8px;
     margin-bottom: 15px;
     flex-wrap: wrap;
+    justify-content: space-between;
 }
 
 .emoji-btn {
@@ -119,4 +120,42 @@ h1 {
   100% {
     transform:translateX(25%);
   }
+}
+
+@media screen and (max-width: 720px) {
+    .frm-gen {
+        position: absolute;
+        border-radius: 0px;
+        height: 100vh;
+        width: 100vw;
+    }
+
+    h1 {
+        position: relative;
+        top: -5%;
+        font-size: 32px;
+    }
+}
+
+@media screen and (max-width: 560px) {
+    h1 {
+        font-size: 28px;
+    }
+}
+
+@media screen and (max-width: 420px) {
+    h1 {
+        font-size: 24px;
+    }
+}
+
+@media screen and (min-width: 721px) {
+    .frm-gen {
+        position: static;
+    }
+
+    h1 {
+        position: static;
+
+    }
 }
